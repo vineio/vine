@@ -1,0 +1,9 @@
+[[serial]]
+PortName        = "COM1"
+BaudRate        = 115200
+MinimumReadSize = 4
+
+[[serial]]
+PortName        = "COM3"
+BaudRate        = 115200
+MinimumReadSize = 4
