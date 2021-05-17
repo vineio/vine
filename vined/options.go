@@ -11,8 +11,11 @@ import (
 )
 
 type Options struct {
-	ID         int64  `flag:"node-id" cfg:"id"`
-	TCPAddress string `flag:"tcp-address"`
+	ID int64 `flag:"node-id" cfg:"id"`
+
+	TCPAddress     string `flag:"tcp-address"`
+	ApiTCPAddress  string `flag:"api-tcp-address"`
+	ApiHTTPAddress string `flag:"api-http-address"`
 
 	Optserials []serial.OptionSerial `flag:"option-serial"`
 

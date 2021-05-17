@@ -1,6 +1,7 @@
 package serial
 
 import (
+	"crypto/md5"
 	"io"
 
 	log "github.com/donnie4w/go-logger/logger"
@@ -31,7 +32,7 @@ func NewSerial(portnum string, baudrate uint) (io.ReadWriteCloser, error) {
 	return tempIO, err
 }
 
-func New(opts []OptionSerial) (map[string]io.ReadWriteCloser, error) {
+func New(opts []OptionSerial) (map[string]io.ReadWriteCloser, map[string][md5.Size]byte, error) {
 	// opts := make([]OptionSerial, 0)
 
 	// config.Unmarshal("serial", &opts)
@@ -40,6 +41,8 @@ func New(opts []OptionSerial) (map[string]io.ReadWriteCloser, error) {
 	// }
 
 	tempios := make(map[string]io.ReadWriteCloser)
+	tempmd5 := make(map[string][md5.Size]byte)
+
 	for _, v := range opts {
 		var io io.ReadWriteCloser
 		var err error
@@ -49,6 +52,7 @@ func New(opts []OptionSerial) (map[string]io.ReadWriteCloser, error) {
 			continue
 		}
 		tempios[v.PortName] = io
+		tempmd5[v.PortName] = md5.Sum([]byte(v.PortName))
 	}
-	return tempios, nil
+	return tempios, tempmd5, nil
 }

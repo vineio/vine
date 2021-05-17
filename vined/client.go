@@ -8,8 +8,7 @@ import (
 )
 
 type Client struct {
-	ctx         *context
-	MessageChan chan Message
+	ctx *context
 }
 
 func (c *Client) Handle(ios map[string]io.ReadWriteCloser, address string) {
@@ -19,6 +18,10 @@ func (c *Client) Handle(ios map[string]io.ReadWriteCloser, address string) {
 			log.Error("util.NewTcp:", err)
 			continue
 		}
+
+		c.ctx.vined.MsgRxChan[k] = make(chan []byte)
+		c.ctx.vined.MsgTxChan[k] = make(chan []byte)
+
 		c.ctx.vined.ClientConnChan[conn.LocalAddr().String()] = make(chan string)
 		c.ctx.vined.ClientConnChan[conn.LocalAddr().String()] <- k
 		log.Debug(k, conn.LocalAddr().String())
@@ -29,6 +32,7 @@ func (c *Client) Handle(ios map[string]io.ReadWriteCloser, address string) {
 
 //read&wirte with net.TCPConn
 func (c *Client) IOLoop(conn net.Conn, portName string) {
+	go c.Write(conn, portName)
 	c.Read(conn, portName)
 
 }
@@ -49,11 +53,22 @@ func (c *Client) Read(conn net.Conn, portName string) {
 		msg.Data = bs[:n]
 		msg.NodeName = c.ctx.vined.getOpts().BroadcastAddress
 		msg.PortName = portName
-		c.MessageChan <- msg
+
+		c.ctx.vined.MsgRxChan[portName] <- msg.Data
+		c.ctx.vined.MessageTotalRxChan <- msg
 		log.Debug("get data：", msg)
 	}
 }
 
-func (c *Client) Write(conn net.Conn, data []byte) {
-
+func (c *Client) Write(conn net.Conn, portName string) {
+	for {
+		data := <-c.ctx.vined.MsgTxChan[portName]
+		conn.Write(data)
+		msg := Message{
+			NodeName: c.ctx.vined.getOpts().BroadcastAddress,
+			PortName: portName,
+			Data:     data,
+		}
+		c.ctx.vined.MessageTotalTxChan <- msg
+	}
 }
