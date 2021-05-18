@@ -17,7 +17,8 @@ import (
 )
 
 const (
-	MAX_TOTAL_CHAN_SIZE = 1024
+	MAX_TOTAL_CHAN_SIZE  = 1024
+	MAX_SINGLE_CHAN_SIZE = 1024
 )
 
 type VINED struct {
@@ -87,6 +88,7 @@ func (v *VINED) Main() {
 		log.Error("serial.New():", err)
 		os.Exit(1)
 	}
+	log.Debug(md5s)
 	log.Debug("serial opeded on:", v.getOpts().Optserials)
 
 	v.serialMd5 = md5s

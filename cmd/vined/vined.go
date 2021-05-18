@@ -20,6 +20,5 @@ func main() {
 	opts.Optserials = optserials
 
 	v := vined.New(opts)
-
 	v.Main()
 }

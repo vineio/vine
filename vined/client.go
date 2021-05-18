@@ -19,8 +19,8 @@ func (c *Client) Handle(ios map[string]io.ReadWriteCloser, address string) {
 			continue
 		}
 
-		c.ctx.vined.MsgRxChan[k] = make(chan []byte)
-		c.ctx.vined.MsgTxChan[k] = make(chan []byte)
+		c.ctx.vined.MsgRxChan[k] = make(chan []byte, MAX_SINGLE_CHAN_SIZE)
+		c.ctx.vined.MsgTxChan[k] = make(chan []byte, MAX_SINGLE_CHAN_SIZE)
 
 		c.ctx.vined.ClientConnChan[conn.LocalAddr().String()] = make(chan string)
 		c.ctx.vined.ClientConnChan[conn.LocalAddr().String()] <- k

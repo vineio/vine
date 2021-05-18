@@ -33,9 +33,9 @@ func NewOptions() *Options {
 	io.WriteString(h, hostname)
 	defaultID := int64(crc32.ChecksumIEEE(h.Sum(nil)) % 1024)
 	return &Options{
-		ID:         defaultID,
-		TCPAddress: "0.0.0.0:4201",
-
+		ID:               defaultID,
+		TCPAddress:       "0.0.0.0:4201",
+		ApiTCPAddress:    "0.0.0.0:4211",
 		BroadcastAddress: hostname,
 	}
 }

@@ -54,5 +54,6 @@ func New(opts []OptionSerial) (map[string]io.ReadWriteCloser, map[string][md5.Si
 		tempios[v.PortName] = io
 		tempmd5[v.PortName] = md5.Sum([]byte(v.PortName))
 	}
+
 	return tempios, tempmd5, nil
 }

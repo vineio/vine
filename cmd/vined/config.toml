@@ -7,3 +7,8 @@ MinimumReadSize = 4
 PortName        = "COM3"
 BaudRate        = 115200
 MinimumReadSize = 4
+
+[[serial]]
+PortName        = "COM5"
+BaudRate        = 115200
+MinimumReadSize = 4
